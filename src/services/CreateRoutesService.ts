@@ -1,5 +1,6 @@
 import prismaClient from "../prisma";
 import axios from "axios";
+import isLatLng from "is-valid-coordinates";
 
 interface RouteRequest {
   origin: string; // latitude, longitude
@@ -9,7 +10,22 @@ interface RouteRequest {
 export class CreateRouteService {
   async execute({ origin, destination }: RouteRequest) {
 
-    // Chamar API de mapas
+    const isValidOrigin = isLatLng(origin);
+    const isValidDestination = isLatLng(destination);
+
+    if(!isValidOrigin || !isValidDestination) {
+      throw new Error("As coordenadas devem ser válidas");
+    }
+
+    if(!origin){
+      throw new Error("Insira as coordenadas de origem");
+    }
+
+    if(!destination){
+      throw new Error("Insira as coordenadas de destino");
+    }
+
+    //Chamar API de mapas
     const apiKey = process.env.MAPS_API_KEY;
 
     const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${origin}&end=${destination}`;
@@ -23,7 +39,7 @@ export class CreateRouteService {
     const geojson = data; // rota inteira
 
 
-    // 2. Salvar no banco
+    //Salvar no banco
     const route = await prismaClient.route.create({
       data: {
         origin,
@@ -38,7 +54,7 @@ export class CreateRouteService {
         destination: true,
         distance_meters: true,
         duration_seconds: true,
-        // Chamar o geojson por enquanto não é necessário, ele vai puxar o passo a passo de como ir da origem até o destino
+        //Chamar o geojson por enquanto não é necessário, ele vai puxar o passo a passo de como ir da origem até o destino
       }
     });
 

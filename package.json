@@ -28,10 +28,12 @@
     "express-async-error": "^0.0.2",
     "express-async-errors": "^3.1.1",
     "express-fileupload": "^1.5.2",
+    "is-valid-coordinates": "^1.0.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
     "node-cron": "^4.2.1",
     "prisma": "^6.17.1",
-    "qrcode": "^1.5.4"
+    "qrcode": "^1.5.4",
+    "validate": "^5.2.0"
   }
 }
